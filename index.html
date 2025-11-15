@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Персональный сайт: Шаблон для Важной Персоны</title>
+    <!-- Все стили полностью прописаны здесь с новой цветовой палитрой --><style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        /* Цветовая палитра: */
+        /* Основной фон/текст: rgb(0, 0, 0) - черный */
+        /* Вторичный фон/текст: rgb(63, 63, 63) - темно-серый */
+        /* Акцентный цвет: rgb(255, 144, 0) - яркий оранжевый */
+
+        /* Базовые стили (body, antialiased, font-family, line-height, text-gray-700) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: rgb(0, 0, 0); /* Основной черный фон */
+            line-height: 1.6;
+            color: #d1d5db; /* Светлый текст для темного фона */
+        }
+
+        /* Основной Контейнер (container mx-auto p-4 sm:p-8 lg:p-12) */
+        .app-container {
+            max-width: 1280px; 
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem; /* p-4 */
+        }
+
+        /* Медиа-запросы для адаптивности контейнера */
+        @media (min-width: 640px) { /* sm breakpoint */
+            .app-container {
+                padding: 2rem; /* sm:p-8 */
+            }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .app-container {
+                padding: 3rem; /* lg:p-12 */
+            }
+        }
+
+        /* --- СТИЛИ ДЛЯ ВОРОТ ВЕРИФИКАЦИИ ВОЗРАСТА --- */
+        .age-gate-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Полупрозрачный черный фон (80% непрозрачности) */
+            background-color: rgba(0, 0, 0, 0.8); 
+            display: none; /* Изначально скрыто, будет показано JS */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            
+            /* Эффект размытия для фона (backdrop blur) */
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+
+        .age-gate-modal {
+            background-color: rgb(63, 63, 63); /* Темно-серый */
+            padding: 3rem;
+            border-radius: 1rem;
+            border: 3px solid rgb(255, 144, 0); /* Акцентная рамка */
+            box-shadow: 0 0 40px rgba(255, 144, 0, 0.5);
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+        }
+        .age-gate-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+        .age-gate-text {
+            font-size: 1.125rem;
+            color: #d1d5db;
+            margin-bottom: 2rem;
+        }
+        .age-gate-actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        /* Age Gate Buttons */
+        .age-gate-button {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 300ms, transform 150ms, box-shadow 300ms;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .age-gate-button:active {
+            transform: scale(0.98);
+        }
+        #btn-visit {
+            background-color: rgb(255, 144, 0); /* Акцентный оранжевый */
+            color: rgb(0, 0, 0); /* Черный текст */
+        }
+        #btn-visit:hover {
+            background-color: rgb(255, 160, 40); /* Светлее оранжевый при наведении */
+            box-shadow: 0 4px 15px rgba(255, 144, 0, 0.6);
+        }
+        #btn-exit {
+            background-color: rgb(0, 0, 0); /* Черный фон */
+            color: rgb(255, 144, 0); /* Оранжевый текст */
+            border: 2px solid rgb(255, 144, 0);
+        }
+        #btn-exit:hover {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgb(255, 144, 0, 0.4);
+        }
+        /* --- КОНЕЦ СТИЛЕЙ ДЛЯ ВОРОТ ВЕРИФИКАЦИИ ВОЗРАСТА --- */
+
+
+        /* Logo Header */
+        .logo-header {
+            background-color: rgb(0, 0, 0);
+            padding: 1.5rem;
+            border-bottom: 3px solid rgb(255, 144, 0);
+            margin-bottom: 2.5rem;
+            text-align: left;
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            padding-left: calc(50vw - 50%);
+        }
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: rgb(255, 144, 0);
+            letter-spacing: 0.2em;
+        }
+
+        /* Заголовок и Введение (header, shadow-xl, rounded-xl, mb-10, p-6, bg-white) */
+        .header-box {
+            text-align: center;
+            margin-bottom: 2.5rem; /* mb-10 */
+            padding: 1.5rem; /* p-6 */
+            background-color: rgb(63, 63, 63); /* Темно-серый фон */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2); /* Усиленная тень для темного фона */
+            border-radius: 0.75rem; /* rounded-xl */
+            border: 1px solid rgb(255, 144, 0); /* Добавим рамку акцентного цвета */
+        }
+        .header-box h1 {
+            font-size: 3rem; /* text-5xl */
+            font-weight: 800; /* font-extrabold */
+            color: #ffffff; /* Белый текст */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .header-box h2 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 300; /* font-light */
+            color: rgb(255, 144, 0); /* Акцентный оранжевый */
+        }
+        .header-box p {
+            margin-top: 1rem; /* mt-4 */
+            color: #a0a0a0; /* Светло-серый текст */
+            max-width: 42rem; /* max-w-2xl */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Основная Секция (main grid md:grid-cols-3 gap-8 mb-12) */
+        .main-grid {
+            display: grid;
+            gap: 2rem; /* gap-8 */
+            margin-bottom: 3rem; /* mb-12 */
+            grid-template-columns: 1fr; /* Default on mobile */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .main-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr)); /* md:grid-cols-3 */
+            }
+            .photo-column {
+                grid-column: span 1 / span 1; /* md:col-span-1 */
+            }
+            .info-column {
+                grid-column: span 2 / span 2; /* md:col-span-2 */
+            }
+        }
+
+        /* Пользовательский стиль для секции с фотографией */
+        .photo-placeholder {
+            min-height: 300px;
+            background-color: #444; /* Темно-серый для плейсхолдера */
+            background-image: url('Screenshot 2025-11-15 210751.png'); /* Темнее плейсхолдер */
+            background-size: cover;
+            background-position: center;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* shadow-2xl */
+            transition: box-shadow 300ms ease-in-out; /* transition duration-300 */
+        }
+        .photo-placeholder:hover {
+            box-shadow: 0 0 0 8px rgb(255, 144, 0, 0.7); /* Акцентная тень при наведении */
+        }
+        .photo-caption {
+            margin-top: 1rem; /* mt-4 */
+            text-align: center;
+            color: #9ca3af; /* Светло-серый текст */
+            font-size: 0.875rem; /* text-sm */
+            font-style: italic;
+        }
+
+        /* Колонка с Ключевой Информацией (info-column, bg-white p-6 rounded-xl shadow-xl) */
+        .info-box {
+            background-color: rgb(63, 63, 63); /* Темно-серый фон */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2); /* shadow-xl */
+            border: 1px solid rgb(255, 144, 0); /* Акцентная рамка */
+        }
+        .info-box h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #ffffff; /* Белый текст */
+            margin-bottom: 1rem; /* mb-4 */
+            border-bottom: 1px solid rgb(255, 144, 0, 0.5); /* Разделитель с акцентом */
+            padding-bottom: 0.5rem; /* pb-2 */
+        }
+        .info-text-block > p {
+            margin-bottom: 1rem; /* space-y-4 */
+        }
+        .info-text-block span {
+            font-weight: 600; /* font-semibold */
+            color: rgb(255, 144, 0); /* Акцентный оранжевый */
+        }
+
+        /* Секция Достижений/Влияния (section, shadow-2xl, p-8, mb-12) */
+        .achievements-section {
+            background-color: rgb(63, 63, 63); /* Темно-серый фон */
+            padding: 2rem; /* p-8 */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* shadow-2xl */
+            margin-bottom: 3rem; /* mb-12 */
+            border: 1px solid rgb(255, 144, 0); /* Акцентная рамка */
+        }
+        .achievements-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #ffffff; /* Белый текст */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+        }
+        .achievements-grid {
+            display: grid;
+            gap: 2rem; /* gap-8 */
+            font-size: 1.125rem; /* text-lg */
+            color: #d1d5db; /* Светлый текст */
+            grid-template-columns: 1fr; /* Default on mobile */
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .achievements-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)); /* lg:grid-cols-2 */
+            }
+        }
+
+        /* Подзаголовки (h4, border-l-4 border-indigo-500 pl-3) */
+        .achievements-grid h4 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #ffffff; /* Белый текст */
+            margin-bottom: 0.75rem; /* mb-3 */
+            border-left: 4px solid rgb(255, 144, 0); /* Акцентный оранжевый */
+            padding-left: 0.75rem; /* pl-3 */
+        }
+        .achievements-grid p {
+            margin-bottom: 1rem; /* mb-4 */
+        }
+
+        /* Блок с цитатой (blockquote, bg-indigo-50) */
+        blockquote {
+            font-style: italic;
+            color: #a0a0a0; /* Светло-серый текст */
+            border-left: 4px solid rgb(255, 144, 0); /* Акцентный оранжевый */
+            padding-left: 1rem; /* pl-4 */
+            padding-top: 0.5rem; /* py-2 */
+            padding-bottom: 0.5rem; /* py-2 */
+            margin-bottom: 1rem; /* mb-4 */
+            background-color: #333; /* Более темный фон для цитаты */
+            border-radius: 0.5rem; /* rounded-lg */
+        }
+        blockquote footer {
+            text-align: right;
+            font-size: 0.875rem; /* text-sm */
+            font-style: normal; /* not-italic */
+            font-weight: 500; /* font-medium */
+            color: rgb(255, 144, 0); /* Акцентный оранжевый */
+        }
+
+        /* Футер (footer, bg-gray-800, mt-10) */
+        .footer-bar {
+            background-color: rgb(0, 0, 0); /* Черный фон */
+            color: #ffffff; /* Белый текст */
+            text-align: center;
+            padding: 1.5rem; /* p-6 */
+            margin-top: 2.5rem; /* mt-10 */
+            border-top: 1px solid rgb(255, 144, 0); /* Акцентный разделитель */
+        }
+        .footer-bar span {
+            color: rgb(255, 144, 0); /* Акцентный оранжевый */
+        }
+    </style>
+</head>
+<body>
+
+    
+    <div id="age-gate" class="age-gate-overlay">
+        <div class="age-gate-modal">
+            <h3 class="age-gate-title">Wenn du firus bist sag ja</h3>
+            <p class="age-gate-text">Пожалуйста, подтвердите, что Вам исполнилось 18 лет, чтобы просмотреть содержимое сайта.</p>
+            <div class="age-gate-actions">
+                <button id="btn-visit" class="age-gate-button">ja</button>
+                <button id="btn-exit" class="age-gate-button age-gate-exit">ich nicht</button>
+            </div>
+        </div>
+    </div>
+   
+
+    
+    <div id="site-content" style="display: none;">
+    
+        <div class="app-container">
+
+            <header class="logo-header">
+                <div class="logo-text">FIRUShub</div>
+            </header>
+
+            <header class="header-box">
+                <h1>firus</h1>
+                <h2>nigger </h2>
+                <p>
+                    was guckst du so?
+                </p>
+            </header>
+
+            <!-- Основная Секция: Фото и Краткое Описание --><main class="main-grid">
+                
+                <!-- Колонка с Фотографией --><div class="photo-column">
+                    <div class="photo-placeholder">
+                        <!-- Замените стили 'background-image' выше на реальное фото --></div>
+                    <div class="photo-caption">
+                        [foto von negger]
+                    </div>
+                </div>
+
+                <!-- Колонка с Ключевой Информацией --><div class="info-column info-box">
+                    <h3>
+                        informationen
+                    </h3>
+                    
+                    <!-- Место для детального текста о биографии --><div class="info-text-block">
+                        <p>
+                            <span>wer ist der negr virus:</span>
+                            wichst jeden tag 3 mal
+                        </p>
+                        <p>
+                            <span>sonst wichtig:</span>
+                            
+                        </p>
+                        <p>
+                            <span>noch sonst wichtig:</span>
+                            
+                        </p>
+                    </div>
+                    <!-- Конец места для текста --></div>
+            </main>
+            
+            <!-- Секция Достижений/Влияния (для более длинного текста) --><section class="achievements-section">
+                <h3>
+                    seine erfolge
+                </h3>
+                
+                <div class="achievements-grid">
+                    <!-- Колонка 1: Подробные Достижения --><div>
+                        <h4>leben:</h4>
+                        <p>
+                            <!-- Место для первого блока текста о работе/вкладе -->wurde geboren, 
+                        </p>
+                        <p>
+                            <!-- Место для второго блока текста о работе/вкладе -->kann vielleicht etwas
+                        </p>
+                    </div>
+                    
+                    <!-- Колонка 2: Наследие и Цитаты --><div>
+                        <h4>zitate wie löwe</h4>
+                        <blockquote>
+                            <p>
+                                "ich kann deas nicht." 
+                            </p>
+                            <footer>
+                                — negger firus
+                            </footer>
+                        </blockquote>
+                        <p>
+                            <!-- Место для дополнительного текста о наследии или влиянии -->er lebt weiter in unseren herzen
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Футер --><footer class="footer-bar">
+            <div class="max-w-4xl mx-auto">
+                <p class="text-sm">
+                    &copy; 2025. keine rechte wie schwarze und frauen um 1700 <span>FIRUShub</span>
+                </p>
+            </div>
+        </footer>
+
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ageGate = document.getElementById('age-gate');
+            const siteContent = document.getElementById('site-content');
+            const btnVisit = document.getElementById('btn-visit');
+            const btnExit = document.getElementById('btn-exit');
+
+            // Используем sessionStorage для минимального сохранения состояния на время сессии.
+            const isConfirmed = sessionStorage.getItem('ageConfirmed') === 'true';
+
+            if (isConfirmed) {
+                // Если подтверждено, показываем сайт
+                ageGate.style.display = 'none';
+                siteContent.style.display = 'block';
+            } else {
+                // Если не подтверждено, показываем ворота
+                ageGate.style.display = 'flex'; 
+                siteContent.style.display = 'none'; 
+            }
+            
+            btnVisit.addEventListener('click', () => {
+                sessionStorage.setItem('ageConfirmed', 'true');
+                ageGate.style.display = 'none';
+                siteContent.style.display = 'block';
+            });
+
+            btnExit.addEventListener('click', () => {
+                // Перенаправление на Google или любую другую страницу при выходе
+                window.location.href = 'https://www.google.com';
+            });
+        });
+    </script>
+</body>
+</html>
